@@ -10,14 +10,17 @@ import {
   Check, 
   ArrowUpRight, 
   AlertCircle,
-  Sparkles
+  Database,
+  Loader2,
+  Sparkles,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function Contact() {
   const { email, instagram, founders } = studioData;
 
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     projectType: 'Web Application',
     message: ''
@@ -25,7 +28,8 @@ export default function Contact() {
 
   const [errors, setErrors] = useState({});
   const [copied, setCopied] = useState(false);
-  const [submittedStatus, setSubmittedStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email);
@@ -35,38 +39,72 @@ export default function Contact() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Please provide your name or organization.';
+    if (!formData.fullName.trim()) newErrors.fullName = 'Please enter your full name or company.';
     if (!formData.email.trim()) {
       newErrors.email = 'Please provide a contact email.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address.';
+      newErrors.email = 'Please provide a valid email address.';
     }
     if (!formData.message.trim() || formData.message.trim().length < 10) {
-      newErrors.message = 'Please share a brief message about your project (at least 10 characters).';
+      newErrors.message = 'Please provide project details (minimum 10 characters).';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Build mailto URI as real direct fallback
-    const subject = encodeURIComponent(`Project Inquiry: ${formData.projectType} from ${formData.name}`);
-    const body = encodeURIComponent(
-      `Hello Rufnix Studio,\n\nName: ${formData.name}\nEmail: ${formData.email}\nProject Type: ${formData.projectType}\n\nProject Details:\n${formData.message}\n`
-    );
-    const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+    setIsSubmitting(true);
+    setApiResponse(null);
 
-    // Open email client
-    window.location.href = mailtoUrl;
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setSubmittedStatus('initiated');
+      const data = await res.json();
+
+      if (!res.ok) {
+        setApiResponse({
+          success: false,
+          message: data.message || 'An error occurred while submitting.',
+        });
+      } else {
+        setApiResponse({
+          success: true,
+          savedToDatabase: data.savedToDatabase,
+          id: data.id,
+          message: data.message,
+        });
+
+        // Reset form on success
+        setFormData({
+          fullName: '',
+          email: '',
+          projectType: 'Web Application',
+          message: '',
+        });
+      }
+    } catch (err) {
+      // Fallback if backend is unreachable
+      setApiResponse({
+        success: false,
+        isNetworkError: true,
+        message: 'Could not connect to the API server. You can also contact us directly via email below.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section id="contact" className="relative py-24 sm:py-36 bg-studio-black overflow-hidden border-t border-studio-panelBorder">
+    <section id="contact" className="relative py-28 sm:py-36 bg-studio-black overflow-hidden border-t border-studio-panelBorder">
       {/* Background Ambience */}
       <div className="absolute top-1/4 right-1/4 w-[36rem] h-[36rem] bg-studio-emerald/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-studio-lime/5 rounded-full blur-3xl pointer-events-none" />
@@ -89,7 +127,7 @@ export default function Contact() {
           </h2>
 
           <p className="text-base sm:text-lg text-studio-secondary max-w-2xl font-mono">
-            Have an idea, software project, or web application you would like to build? Reach out to Rufnix Studio directly.
+            Have a project, web application, or product vision you would like to build? Transmit your inquiry directly to our engineering desk.
           </p>
         </div>
 
@@ -205,7 +243,7 @@ export default function Contact() {
 
           </div>
 
-          {/* RIGHT: Validated Project Inquiry Form */}
+          {/* RIGHT: Validated MongoDB Project Inquiry Form */}
           <div className="lg:col-span-7">
             <div className="rounded-3xl bg-studio-charcoal/90 border-2 border-studio-panelBorder p-6 sm:p-10 shadow-2xl relative">
               
@@ -215,56 +253,85 @@ export default function Contact() {
                     Project Inquiry Form
                   </h3>
                   <p className="text-xs font-mono text-studio-secondary">
-                    Provide your requirements to initialize a project conversation.
+                    Direct MongoDB-integrated submission pipeline.
                   </p>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-studio-forest border border-studio-panelBorder text-xs font-mono text-studio-lime">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>START A PROJECT</span>
+                  <Database className="w-3.5 h-3.5 text-studio-emerald" />
+                  <span>REST API // MONGODB</span>
                 </div>
               </div>
 
-              {submittedStatus === 'initiated' && (
-                <div className="mb-6 p-4 rounded-xl bg-studio-forest border border-studio-emerald/40 text-xs font-mono text-studio-mint space-y-1">
-                  <div className="font-bold text-studio-lime flex items-center gap-2">
-                    <Check className="w-4 h-4" />
-                    <span>Inquiry Prepared</span>
+              {/* API Response Notification */}
+              {apiResponse && (
+                <div className={`mb-6 p-4 rounded-xl border text-xs font-mono space-y-1.5 ${
+                  apiResponse.success
+                    ? 'bg-studio-forest/90 border-studio-emerald text-studio-mint'
+                    : 'bg-red-950/40 border-red-500/50 text-red-200'
+                }`}>
+                  <div className="font-bold flex items-center gap-2">
+                    {apiResponse.success ? (
+                      <>
+                        <Check className="w-4 h-4 text-studio-lime" />
+                        <span className="text-studio-lime">Inquiry Received</span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle className="w-4 h-4 text-red-400" />
+                        <span className="text-red-400">Submission Notice</span>
+                      </>
+                    )}
                   </div>
-                  <p>
-                    Your email client has been prepared with your inquiry details addressed to <span className="text-studio-text">{email}</span>. If your mail client did not open automatically, you can also copy our email above.
+                  <p className="leading-relaxed">
+                    {apiResponse.message}
                   </p>
+                  {apiResponse.id && (
+                    <div className="pt-1 text-[11px] text-studio-muted">
+                      MongoDB Record ID: <span className="font-mono text-studio-lime">{apiResponse.id}</span>
+                    </div>
+                  )}
+                  {apiResponse.isNetworkError && (
+                    <div className="pt-2">
+                      <a
+                        href={`mailto:${email}?subject=Project%20Inquiry&body=${encodeURIComponent(formData.message)}`}
+                        className="inline-flex items-center gap-1 text-studio-lime underline font-semibold"
+                      >
+                        Send via Email Client Instead &rarr;
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 
-                {/* Name */}
+                {/* Full Name */}
                 <div>
-                  <label htmlFor="name" className="block text-xs font-mono text-studio-secondary mb-1.5">
-                    Your Name or Organization <span className="text-studio-lime">*</span>
+                  <label htmlFor="fullName" className="block text-xs font-mono text-studio-secondary mb-1.5">
+                    Full Name or Organization <span className="text-studio-lime">*</span>
                   </label>
                   <input
-                    id="name"
+                    id="fullName"
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. Alex Vance / TechCo"
                     className={`w-full px-4 py-3 rounded-xl bg-studio-forest/60 border font-mono text-sm text-studio-text placeholder-studio-muted focus:outline-none focus:ring-2 focus:ring-studio-emerald transition-all ${
-                      errors.name ? 'border-red-500/80' : 'border-studio-panelBorder'
+                      errors.fullName ? 'border-red-500/80' : 'border-studio-panelBorder'
                     }`}
                   />
-                  {errors.name && (
+                  {errors.fullName && (
                     <p className="text-[11px] font-mono text-red-400 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
-                      <span>{errors.name}</span>
+                      <span>{errors.fullName}</span>
                     </p>
                   )}
                 </div>
 
-                {/* Email */}
+                {/* Email Address */}
                 <div>
                   <label htmlFor="email" className="block text-xs font-mono text-studio-secondary mb-1.5">
-                    Your Email Address <span className="text-studio-lime">*</span>
+                    Email Address <span className="text-studio-lime">*</span>
                   </label>
                   <input
                     id="email"
@@ -340,16 +407,26 @@ export default function Contact() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-full font-mono text-sm font-bold text-studio-black bg-gradient-to-r from-studio-emerald via-studio-mint to-studio-lime hover:shadow-glow-emerald transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-studio-lime"
+                  disabled={isSubmitting}
+                  className="w-full py-4 rounded-full font-mono text-sm font-bold text-studio-black bg-gradient-to-r from-studio-emerald via-studio-mint to-studio-lime hover:shadow-glow-emerald transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-studio-lime disabled:opacity-50"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>START A PROJECT</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-studio-black" />
+                      <span>TRANSMITTING INQUIRY...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>TRANSMIT INQUIRY</span>
+                    </>
+                  )}
                 </button>
 
-                {/* Genuine Integration Status Notice */}
+                {/* Backend Telemetry Note */}
                 <div className="pt-2 text-[10px] font-mono text-studio-muted text-center flex items-center justify-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-studio-emerald" />
-                  <span>Direct mailto transmission configured. No external tracker or third-party middleware used.</span>
+                  <span>Configured via Express + MongoDB Atlas. Rate-limiting & duplicate prevention enabled.</span>
                 </div>
 
               </form>
