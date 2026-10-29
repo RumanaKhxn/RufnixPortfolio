@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  /* Custom dark scrollbar with emerald accent */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #030504;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #0d2a1b;
+    border-radius: 4px;
+    border: 1px solid #16432b;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00e676;
+  }
+}
+
+/* 3D Perspective and Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Background Grids & Atmospheric textures */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 230, 118, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 230, 118, 0.04) 1px, transparent 1px);
+}
+
+.bg-dot-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(0, 230, 118, 0.12) 1px, transparent 1px);
+}
+
+/* Glowing text and borders */
+.text-glow-emerald {
+  text-shadow: 0 0 20px rgba(0, 230, 118, 0.6), 0 0 40px rgba(0, 230, 118, 0.25);
+}
+
+.text-glow-lime {
+  text-shadow: 0 0 20px rgba(163, 255, 18, 0.6), 0 0 40px rgba(163, 255, 18, 0.25);
+}
+
+.border-glow-emerald {
+  border-color: rgba(0, 230, 118, 0.4);
+  box-shadow: 0 0 15px rgba(0, 230, 118, 0.15);
+}
+
+/* Glassmorphism tuned to dark forest/charcoal */
+.glass-panel {
+  background: rgba(10, 23, 16, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(0, 230, 118, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(0, 230, 118, 0.2);
+}
+
+/* Circuit trace line animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.circuit-path {
+  stroke-dasharray: 10, 10;
+  animation: dash 20s linear infinite;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
