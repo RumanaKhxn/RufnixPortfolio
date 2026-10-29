@@ -253,72 +253,38 @@ export default function Contact() {
                     Project Inquiry Form
                   </h3>
                   <p className="text-xs font-mono text-studio-secondary">
-                    Direct MongoDB-integrated submission pipeline.
+                    Direct studio communication pipeline.
                   </p>
                 </div>
-                <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-studio-forest border border-studio-panelBorder text-xs font-mono text-studio-lime">
-                  <Database className="w-3.5 h-3.5 text-studio-emerald" />
-                  <span>REST API // MONGODB</span>
+                <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-studio-forest border border-studio-panelBorder text-xs font-mono text-studio-mint">
+                  <span className="w-2 h-2 rounded-full bg-studio-lime animate-pulse" />
+                  <span>DIRECT DESK</span>
                 </div>
               </div>
 
-              {/* SUCCESS STATE: HIGH-VISIBILITY DATABASE CONFIRMATION DOSSIER */}
+              {/* SUCCESS STATE: CLEAN, MINIMAL & PROFESSIONAL NOTIFICATION PANEL */}
               {apiResponse && apiResponse.success ? (
-                <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300 mb-6">
-                  <div className="rounded-2xl bg-studio-forest/90 border-2 border-studio-lime p-6 sm:p-8 space-y-5 shadow-glow-emerald">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-studio-black border border-studio-lime flex items-center justify-center text-studio-lime shadow-glow-emerald">
-                        <Check className="w-6 h-6 text-studio-lime stroke-[3]" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-mono font-bold text-studio-lime tracking-widest uppercase">
-                          Transmission Successful
-                        </div>
-                        <h4 className="text-xl sm:text-2xl font-bold font-sans text-studio-text">
-                          DATA STORED IN MONGODB DATABASE
-                        </h4>
-                      </div>
-                    </div>
+                <div className="relative rounded-2xl bg-studio-forest/30 border border-studio-panelBorder p-8 sm:p-10 text-center space-y-4 animate-in fade-in zoom-in-95 duration-300 mb-6">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-studio-forest border border-studio-emerald/40 flex items-center justify-center text-studio-lime shadow-glow-subtle">
+                    <Check className="w-6 h-6 text-studio-lime" />
+                  </div>
 
-                    <p className="text-xs sm:text-sm font-mono text-studio-mint leading-relaxed">
-                      Your inquiry has been successfully validated and permanently stored in Rufnix Studio&apos;s live database. We will review your project requirements and follow up promptly.
+                  <div className="space-y-2">
+                    <h4 className="text-xl sm:text-2xl font-bold font-sans text-studio-text">
+                      Inquiry Submitted Successfully!
+                    </h4>
+                    <p className="text-xs sm:text-sm font-mono text-studio-secondary max-w-md mx-auto leading-relaxed">
+                      Your inquiry has been successfully submitted. We will review your project requirements and follow up promptly.
                     </p>
+                  </div>
 
-                    <div className="rounded-xl bg-studio-black/80 border border-studio-panelBorder p-4 space-y-2.5 font-mono text-xs">
-                      <div className="flex items-center justify-between pb-2 border-b border-white/10 text-[11px] text-studio-muted">
-                        <span>DATABASE VERIFICATION RECEIPT</span>
-                        <span className="text-studio-lime font-bold">&bull; ATLAS CLUSTER PERSISTED</span>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-studio-secondary">
-                        <div>
-                          <span className="text-studio-muted block text-[10px]">DATABASE:</span>
-                          <span className="text-studio-text font-bold">rufnix</span>
-                        </div>
-                        <div>
-                          <span className="text-studio-muted block text-[10px]">COLLECTION:</span>
-                          <span className="text-studio-text font-bold">contacts</span>
-                        </div>
-                      </div>
-
-                      {apiResponse.id && (
-                        <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
-                          <div>
-                            <span className="text-studio-muted block text-[10px]">RECORD OBJECT_ID:</span>
-                            <span className="font-mono text-studio-lime font-bold text-xs">
-                              {apiResponse.id}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
+                  <div className="pt-3">
                     <button
                       type="button"
                       onClick={() => setApiResponse(null)}
-                      className="w-full py-4 rounded-xl text-xs font-mono font-bold uppercase tracking-wider text-studio-black bg-gradient-to-r from-studio-emerald via-studio-mint to-studio-lime hover:shadow-glow-emerald transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+                      className="px-6 py-2.5 rounded-xl bg-studio-forest border border-studio-panelBorder text-xs font-mono font-semibold text-studio-mint hover:text-studio-lime hover:border-studio-lime transition-all"
                     >
-                      <span>SUBMIT ANOTHER INQUIRY</span>
+                      Send Another Message
                     </button>
                   </div>
                 </div>
@@ -464,10 +430,10 @@ export default function Contact() {
                   )}
                 </button>
 
-                {/* Backend Telemetry Note */}
+                {/* Direct Founder Note */}
                 <div className="pt-2 text-[10px] font-mono text-studio-muted text-center flex items-center justify-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-studio-emerald" />
-                  <span>Configured via Express + MongoDB Atlas. Rate-limiting & duplicate prevention enabled.</span>
+                  <span>Inquiries routed directly to founders &bull; 24h Response Standard</span>
                 </div>
 
               </form>
