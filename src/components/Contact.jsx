@@ -262,34 +262,75 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* API Response Notification */}
-              {apiResponse && (
-                <div className={`mb-6 p-4 rounded-xl border text-xs font-mono space-y-1.5 ${
-                  apiResponse.success
-                    ? 'bg-studio-forest/90 border-studio-emerald text-studio-mint'
-                    : 'bg-red-950/40 border-red-500/50 text-red-200'
-                }`}>
-                  <div className="font-bold flex items-center gap-2">
-                    {apiResponse.success ? (
-                      <>
-                        <Check className="w-4 h-4 text-studio-lime" />
-                        <span className="text-studio-lime">Inquiry Received</span>
-                      </>
-                    ) : (
-                      <>
-                        <AlertCircle className="w-4 h-4 text-red-400" />
-                        <span className="text-red-400">Submission Notice</span>
-                      </>
-                    )}
+              {/* SUCCESS STATE: HIGH-VISIBILITY DATABASE CONFIRMATION DOSSIER */}
+              {apiResponse && apiResponse.success ? (
+                <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300 mb-6">
+                  <div className="rounded-2xl bg-studio-forest/90 border-2 border-studio-lime p-6 sm:p-8 space-y-5 shadow-glow-emerald">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-studio-black border border-studio-lime flex items-center justify-center text-studio-lime shadow-glow-emerald">
+                        <Check className="w-6 h-6 text-studio-lime stroke-[3]" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-mono font-bold text-studio-lime tracking-widest uppercase">
+                          Transmission Successful
+                        </div>
+                        <h4 className="text-xl sm:text-2xl font-bold font-sans text-studio-text">
+                          DATA STORED IN MONGODB DATABASE
+                        </h4>
+                      </div>
+                    </div>
+
+                    <p className="text-xs sm:text-sm font-mono text-studio-mint leading-relaxed">
+                      Your inquiry has been successfully validated and permanently stored in Rufnix Studio&apos;s live database. We will review your project requirements and follow up promptly.
+                    </p>
+
+                    <div className="rounded-xl bg-studio-black/80 border border-studio-panelBorder p-4 space-y-2.5 font-mono text-xs">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10 text-[11px] text-studio-muted">
+                        <span>DATABASE VERIFICATION RECEIPT</span>
+                        <span className="text-studio-lime font-bold">&bull; ATLAS CLUSTER PERSISTED</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-studio-secondary">
+                        <div>
+                          <span className="text-studio-muted block text-[10px]">DATABASE:</span>
+                          <span className="text-studio-text font-bold">rufnix</span>
+                        </div>
+                        <div>
+                          <span className="text-studio-muted block text-[10px]">COLLECTION:</span>
+                          <span className="text-studio-text font-bold">contacts</span>
+                        </div>
+                      </div>
+
+                      {apiResponse.id && (
+                        <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+                          <div>
+                            <span className="text-studio-muted block text-[10px]">RECORD OBJECT_ID:</span>
+                            <span className="font-mono text-studio-lime font-bold text-xs">
+                              {apiResponse.id}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setApiResponse(null)}
+                      className="w-full py-4 rounded-xl text-xs font-mono font-bold uppercase tracking-wider text-studio-black bg-gradient-to-r from-studio-emerald via-studio-mint to-studio-lime hover:shadow-glow-emerald transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+                    >
+                      <span>SUBMIT ANOTHER INQUIRY</span>
+                    </button>
+                  </div>
+                </div>
+              ) : apiResponse && !apiResponse.success ? (
+                <div className="mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-xs font-mono space-y-1.5 text-red-200">
+                  <div className="font-bold flex items-center gap-2 text-red-400">
+                    <AlertCircle className="w-4 h-4 text-red-400" />
+                    <span>Submission Notice</span>
                   </div>
                   <p className="leading-relaxed">
                     {apiResponse.message}
                   </p>
-                  {apiResponse.id && (
-                    <div className="pt-1 text-[11px] text-studio-muted">
-                      MongoDB Record ID: <span className="font-mono text-studio-lime">{apiResponse.id}</span>
-                    </div>
-                  )}
                   {apiResponse.isNetworkError && (
                     <div className="pt-2">
                       <a
@@ -301,7 +342,7 @@ export default function Contact() {
                     </div>
                   )}
                 </div>
-              )}
+              ) : null}
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 

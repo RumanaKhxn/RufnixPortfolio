@@ -83,6 +83,45 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Latest confirmed submissions telemetry (for transparency and verification)
+app.get('/api/contact/latest', async (req, res) => {
+  try {
+    if (!isMongoConnected || !db) {
+      return res.json({ success: true, count: 0, items: [] });
+    }
+    const latest = await db.collection('contacts')
+      .find({})
+      .sort({ submittedAt: -1 })
+      .limit(5)
+      .project({
+        fullName: 1,
+        email: 1,
+        projectType: 1,
+        submittedAt: 1,
+        _id: 1,
+      })
+      .toArray();
+
+    const sanitized = latest.map((doc) => ({
+      id: doc._id.toString(),
+      fullName: doc.fullName,
+      emailMasked: doc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3'),
+      projectType: doc.projectType,
+      submittedAt: doc.submittedAt,
+    }));
+
+    res.json({
+      success: true,
+      count: sanitized.length,
+      database: 'rufnix',
+      collection: 'contacts',
+      items: sanitized,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Could not fetch records' });
+  }
+});
+
 // Contact Submission Endpoint
 app.post('/api/contact', async (req, res) => {
   try {
@@ -112,14 +151,13 @@ app.post('/api/contact', async (req, res) => {
       });
     }
 
-    // 2. Duplicate submission prevention (60-second cooldown per email)
+    // 2. Duplicate submission prevention (Relaxed 3-second cooldown so users can freely submit)
     const now = Date.now();
     const lastSubmitTime = submissionCache.get(clientEmail);
-    if (lastSubmitTime && now - lastSubmitTime < 60000) {
-      const waitSec = Math.ceil((60000 - (now - lastSubmitTime)) / 1000);
+    if (lastSubmitTime && now - lastSubmitTime < 3000) {
       return res.status(429).json({
         success: false,
-        message: `An inquiry from this email was recently received. Please wait ${waitSec} seconds before submitting again.`,
+        message: 'A submission is currently processing. Please wait 3 seconds before submitting again.',
       });
     }
 
@@ -143,8 +181,16 @@ app.post('/api/contact', async (req, res) => {
       return res.status(201).json({
         success: true,
         savedToDatabase: true,
-        id: result.insertedId,
-        message: 'Your inquiry has been stored in Rufnix Studio MongoDB database. We will be in touch shortly.',
+        database: 'rufnix',
+        collection: 'contacts',
+        id: result.insertedId.toString(),
+        submittedAt: contactDoc.submittedAt,
+        data: {
+          fullName: clientName,
+          email: clientEmail,
+          projectType: type,
+        },
+        message: 'Successfully written to MongoDB Atlas database (rufnix.contacts).',
       });
     }
 
