@@ -2,15 +2,12 @@ import { useState, useEffect } from 'react';
 import Scene3D from './components/canvas/Scene3D';
 import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
-import Hero3D from './components/story/Hero3D';
-import EngineeringProcess3D from './components/story/EngineeringProcess3D';
-import SpatialSkills3D from './components/story/SpatialSkills3D';
-import Founders3D from './components/story/Founders3D';
-import ProjectsOrbit3D from './components/story/ProjectsOrbit3D';
-import ProductReveal3D from './components/story/ProductReveal3D';
-import FutureCTA from './components/story/FutureCTA';
-import Services from './components/Services';
-import Contact from './components/Contact';
+import HeroChapter from './components/story/HeroChapter';
+import EvolutionChapter from './components/story/EvolutionChapter';
+import ArchitectureChapter from './components/story/ArchitectureChapter';
+import FoundersChapter from './components/story/FoundersChapter';
+import ProjectGalleryChapter from './components/story/ProjectGalleryChapter';
+import PortalContactChapter from './components/story/PortalContactChapter';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -40,33 +37,41 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-studio-black text-studio-text selection:bg-studio-emerald selection:text-studio-black">
-      {/* 1. Master Three.js WebGL 3D Scene */}
+      {/* 1. Master Three.js WebGL 3D Parametric Universe */}
       <Scene3D
         scrollProgress={scrollProgress}
         activeProjectId={activeProjectId}
         onProjectSelect={(id) => setActiveProjectId(id)}
       />
 
-      {/* 2. Desktop Custom Cursor */}
+      {/* 2. Desktop Custom Cursor with Hover States */}
       <CustomCursor />
 
       {/* 3. Floating Capsule Navbar */}
       <Navbar />
 
-      {/* 4. Cinematic Scroll-Driven Story Chapters */}
+      {/* 4. Cinematic Scroll-Driven Chapters */}
       <main className="relative z-10 flex flex-col">
-        <Hero3D />
-        <EngineeringProcess3D />
-        <SpatialSkills3D />
-        <Founders3D />
-        <ProjectsOrbit3D
+        {/* Chapter 01: Hero & Kinetic Narrative */}
+        <HeroChapter />
+
+        {/* Chapter 02: Evolution & Manifesto */}
+        <EvolutionChapter />
+
+        {/* Chapter 03: Architecture & Capabilities */}
+        <ArchitectureChapter />
+
+        {/* Chapter 04: Founders & Engineering Cores */}
+        <FoundersChapter />
+
+        {/* Chapter 05: Premier Project Gallery */}
+        <ProjectGalleryChapter
           activeProjectId={activeProjectId}
           onSelectProject={(id) => setActiveProjectId(id)}
         />
-        <ProductReveal3D />
-        <Services />
-        <FutureCTA />
-        <Contact />
+
+        {/* Chapter 06: Dimensional Portal & MongoDB Contact Pipeline */}
+        <PortalContactChapter />
       </main>
 
       {/* 5. Studio Footer */}

@@ -9,12 +9,10 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', href: '#hero' },
-    { name: 'Process', href: '#process' },
-    { name: 'Skills', href: '#skills' },
+    { name: 'Evolution', href: '#evolution' },
+    { name: 'Architecture', href: '#architecture' },
     { name: 'Founders', href: '#about' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Featured', href: '#featured' },
-    { name: 'Services', href: '#services' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -23,12 +21,12 @@ export default function Navbar() {
       setScrolled(window.scrollY > 40);
 
       // Section spy
-      const sections = ['hero', 'process', 'skills', 'about', 'projects', 'featured', 'services', 'contact'];
+      const sections = ['hero', 'evolution', 'architecture', 'about', 'projects', 'contact'];
       for (const section of sections) {
         const el = document.getElementById(section);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
+          if (rect.top <= 250 && rect.bottom >= 200) {
             setActiveSection(section);
             break;
           }

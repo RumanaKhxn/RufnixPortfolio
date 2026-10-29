@@ -68,12 +68,10 @@ export default function Footer() {
             </div>
             <ul className="space-y-2 text-xs font-mono text-studio-secondary">
               <li><a href="#hero" className="hover:text-studio-lime transition-colors">Home</a></li>
-              <li><a href="#about" className="hover:text-studio-lime transition-colors">About Founders</a></li>
-              <li><a href="#skills" className="hover:text-studio-lime transition-colors">Skills & Stack</a></li>
-              <li><a href="#projects" className="hover:text-studio-lime transition-colors">Projects</a></li>
-              <li><a href="#featured" className="hover:text-studio-lime transition-colors">Featured Product</a></li>
-              <li><a href="#services" className="hover:text-studio-lime transition-colors">Services</a></li>
-              <li><a href="#workflow" className="hover:text-studio-lime transition-colors">Workflow</a></li>
+              <li><a href="#evolution" className="hover:text-studio-lime transition-colors">Evolution</a></li>
+              <li><a href="#architecture" className="hover:text-studio-lime transition-colors">Architecture</a></li>
+              <li><a href="#about" className="hover:text-studio-lime transition-colors">Founders</a></li>
+              <li><a href="#projects" className="hover:text-studio-lime transition-colors">Featured Projects</a></li>
               <li><a href="#contact" className="hover:text-studio-lime transition-colors">Contact</a></li>
             </ul>
           </div>
