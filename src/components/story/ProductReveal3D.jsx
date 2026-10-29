@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { studioData } from '../../data/portfolioData';
+import StudioDeviceFrame from '../ui/StudioDeviceFrame';
+import ScreenshotLightbox from '../ui/ScreenshotLightbox';
 import { Instagram, ArrowUpRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function ProductReveal3D() {
   const { instagram, projects } = studioData;
-  const frProduct = projects.find(p => p.id === 'fr-studio');
+  const frProduct = projects.find((p) => p.id === 'fr-studio');
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   if (!frProduct) return null;
 
@@ -14,8 +18,8 @@ export default function ProductReveal3D() {
     >
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
-        {/* Left Column: Product Story */}
-        <div className="lg:col-span-6 pointer-events-auto space-y-6">
+        {/* Left Column: Product Story & Strategic Focus */}
+        <div className="lg:col-span-5 pointer-events-auto space-y-6">
           
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-studio-forest/90 border border-studio-emerald/50 text-xs font-mono text-studio-lime backdrop-blur-md shadow-glow-subtle">
@@ -74,33 +78,44 @@ export default function ProductReveal3D() {
 
         </div>
 
-        {/* Right Column: Architectural Telemetry HUD */}
-        <div className="lg:col-span-6 pointer-events-auto">
-          <div className="rounded-3xl bg-studio-charcoal/90 backdrop-blur-xl border-2 border-studio-panelBorder p-6 sm:p-8 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-studio-panelBorder">
-              <span className="text-xs font-mono font-bold text-studio-lime">
-                F&R STUDIO // DIMENSIONAL SYSTEM
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-studio-forest text-studio-mint">
-                Active Three.js Display
-              </span>
-            </div>
+        {/* Right Column: High-DPI Studio Device Showcase with Click-to-Zoom */}
+        <div className="lg:col-span-7 pointer-events-auto space-y-4">
+          
+          <StudioDeviceFrame
+            src={frProduct.image}
+            alt="F&R Studio Luxury Salon Interface"
+            title="F&R Studio"
+            hostname="fr-beauty-studio.rufnix.internal"
+            status="In Development"
+            aspectRatio="2.09/1"
+            onInspect={() => setIsLightboxOpen(true)}
+            primaryAction={{
+              label: 'Follow on Instagram',
+              url: instagram,
+            }}
+          />
 
-            <div className="p-4 rounded-xl bg-studio-black/80 border border-studio-panelBorder font-mono text-xs text-studio-secondary space-y-2">
-              <div className="text-studio-muted">// System Architecture Specification</div>
-              <div><span className="text-studio-lime">platform</span>: &ldquo;F&R Luxury Salon Ecosystem&rdquo;;</div>
-              <div><span className="text-studio-lime">runtime</span>: &ldquo;React SPA + ASP.NET Core API&rdquo;;</div>
-              <div><span className="text-studio-lime">database</span>: &ldquo;Microsoft SQL Server Multi-Tenant&rdquo;;</div>
-              <div><span className="text-studio-lime">telemetry</span>: &ldquo;Deposit Escrow & Stylist Calendars&rdquo;;</div>
+          {/* Architectural Telemetry Bar */}
+          <div className="p-4 rounded-2xl bg-studio-charcoal/90 border border-studio-panelBorder flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 text-studio-mint">
+              <Sparkles className="w-4 h-4 text-studio-lime" />
+              <span>Multi-Tenant ASP.NET Core &amp; React Architecture</span>
             </div>
-
-            <p className="text-xs font-mono text-studio-muted">
-              Observe the persistent 3D canvas behind this panel: the volumetric device chassis coordinates perspective rotation with your pointer movement.
-            </p>
+            <div className="text-studio-muted">
+              Click screenshot to inspect native 1024px resolution
+            </div>
           </div>
+
         </div>
 
       </div>
+
+      {/* Mobbin Full-Resolution Lightbox */}
+      <ScreenshotLightbox
+        isOpen={isLightboxOpen}
+        project={frProduct}
+        onClose={() => setIsLightboxOpen(false)}
+      />
     </section>
   );
 }

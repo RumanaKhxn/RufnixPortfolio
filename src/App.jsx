@@ -4,6 +4,7 @@ import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
 import Hero3D from './components/story/Hero3D';
 import EngineeringProcess3D from './components/story/EngineeringProcess3D';
+import SpatialSkills3D from './components/story/SpatialSkills3D';
 import Founders3D from './components/story/Founders3D';
 import ProjectsOrbit3D from './components/story/ProjectsOrbit3D';
 import ProductReveal3D from './components/story/ProductReveal3D';
@@ -32,7 +33,7 @@ export default function App() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial call
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -56,6 +57,7 @@ export default function App() {
       <main className="relative z-10 flex flex-col">
         <Hero3D />
         <EngineeringProcess3D />
+        <SpatialSkills3D />
         <Founders3D />
         <ProjectsOrbit3D
           activeProjectId={activeProjectId}

@@ -1,16 +1,39 @@
 import { useState } from 'react';
 import { studioData } from '../../data/portfolioData';
+import StudioDeviceFrame from '../ui/StudioDeviceFrame';
+import ScreenshotLightbox from '../ui/ScreenshotLightbox';
 import { Eye, Code2, ExternalLink, Sparkles, ShieldCheck, ChevronRight, Layers, ArrowUpRight } from 'lucide-react';
 
 export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
   const { projects } = studioData;
-  const [viewMode, setViewMode] = useState('ui'); // 'ui' | 'code'
+  const [viewMode, setViewMode] = useState('ui');
+  const [lightboxProject, setLightboxProject] = useState(null);
 
-  // Filter only genuine screenshot-backed projects for the premier 3D gallery
-  // Removing the plain list rows for NutriRoute & Umbrella Invoice from this selector
-  const premierProjects = projects.filter(p => p.hasGenuineImage);
+  // Spotlighting genuine screenshot-backed projects in premier 3D gallery
+  const premierProjects = projects.filter((p) => p.hasGenuineImage);
+  const activeProject = premierProjects.find((p) => p.id === activeProjectId) || premierProjects[0];
 
-  const activeProject = premierProjects.find(p => p.id === activeProjectId) || premierProjects[0];
+  // Map exact native aspect ratios audited from files:
+  // fr-beauty-studio: 1024/491 = 2.09
+  // lifepilot: 1024/486 = 2.11
+  // bytemind: 1024/543 = 1.89
+  const getAspectRatio = (id) => {
+    switch (id) {
+      case 'fr-studio': return '2.09/1';
+      case 'lifepilot': return '2.11/1';
+      case 'bytemind': return '1.89/1';
+      default: return '16/9';
+    }
+  };
+
+  const getHostname = (id) => {
+    switch (id) {
+      case 'fr-studio': return 'fr-studio.rufnix.internal';
+      case 'lifepilot': return 'lifepilot.workspace';
+      case 'bytemind': return 'bytemind.ai/chat';
+      default: return 'rufnix.studio';
+    }
+  };
 
   return (
     <section
@@ -26,7 +49,7 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-studio-forest/90 border border-studio-panelBorder text-xs font-mono text-studio-mint backdrop-blur-md shadow-glow-subtle">
               <span className="w-2 h-2 rounded-full bg-studio-lime animate-pulse" />
               <span className="text-studio-emerald">SCENE D</span>
-              <span>// PREMIER PROJECT SHOWCASE</span>
+              <span>// PREMIER PRODUCT GALLERY</span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-studio-text uppercase font-sans">
@@ -41,7 +64,7 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
             </p>
           </div>
 
-          {/* Premium Project Cards Selector (Clean & High-Tech) */}
+          {/* Premium Project Cards Selector */}
           <div className="space-y-3">
             {premierProjects.map((proj, idx) => {
               const isSelected = proj.id === activeProject.id;
@@ -91,149 +114,97 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
               <Sparkles className="w-3.5 h-3.5 text-studio-lime" />
               <span>Three.js Spatial Raycasting Enabled</span>
             </span>
-            <span className="text-studio-emerald font-bold">&bull; Real Screenshots</span>
+            <span className="text-studio-emerald font-bold">&bull; Click Image to Inspect Full Resolution</span>
           </div>
 
         </div>
 
-        {/* Right Column: Premium Dimensional Device Frame & Inspector */}
-        <div className="lg:col-span-7 pointer-events-auto">
-          <div className="rounded-3xl bg-studio-charcoal/95 backdrop-blur-xl border-2 border-studio-emerald/40 p-6 sm:p-8 shadow-2xl relative space-y-6 group hover:border-studio-lime/60 transition-colors duration-500">
-            
-            {/* Custom Browser Titlebar HUD */}
-            <div className="flex items-center justify-between pb-4 border-b border-studio-panelBorder">
-              <div className="flex items-center gap-2.5">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-studio-emerald" />
-                </div>
-                <div className="px-3 py-1 rounded-md bg-studio-forest border border-studio-panelBorder text-xs font-mono text-studio-secondary flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-studio-emerald animate-pulse" />
-                  <span className="text-studio-text truncate max-w-[180px] sm:max-w-xs">{activeProject.codeFilename}</span>
-                </div>
+        {/* Right Column: Mobbin-Inspired Studio Device Frame & Details */}
+        <div className="lg:col-span-7 pointer-events-auto space-y-6">
+          
+          {/* Custom Studio Device Frame with Native Aspect Ratio */}
+          <StudioDeviceFrame
+            src={activeProject.image}
+            alt={activeProject.title}
+            title={activeProject.title}
+            hostname={getHostname(activeProject.id)}
+            status={activeProject.status}
+            aspectRatio={getAspectRatio(activeProject.id)}
+            codeSnippet={activeProject.codeSnippet}
+            viewMode={viewMode}
+            onToggleView={() => setViewMode(viewMode === 'ui' ? 'code' : 'ui')}
+            onInspect={() => setLightboxProject(activeProject)}
+            primaryAction={activeProject.primaryAction}
+          />
+
+          {/* Project Details Dossier */}
+          <div className="rounded-2xl bg-studio-charcoal/80 border border-studio-panelBorder p-5 sm:p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold font-sans text-studio-text">
+                  {activeProject.title}
+                </h3>
+                <p className="text-xs font-mono text-studio-lime font-semibold">
+                  {activeProject.category}
+                </p>
               </div>
 
-              {/* View Toggle */}
-              <div className="flex items-center bg-studio-black rounded-lg p-1 border border-studio-panelBorder">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('ui')}
-                  className={`px-3 py-1 rounded text-xs font-mono flex items-center gap-1.5 transition-colors ${
-                    viewMode === 'ui' ? 'bg-studio-forest text-studio-lime font-bold shadow-glow-subtle' : 'text-studio-muted hover:text-studio-text'
-                  }`}
+              {activeProject.primaryAction && activeProject.primaryAction.url && (
+                <a
+                  href={activeProject.primaryAction.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold text-studio-black bg-gradient-to-r from-studio-emerald to-studio-lime shadow-glow-emerald hover:opacity-90 transition-all w-fit"
                 >
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>UI Preview</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('code')}
-                  className={`px-3 py-1 rounded text-xs font-mono flex items-center gap-1.5 transition-colors ${
-                    viewMode === 'code' ? 'bg-studio-forest text-studio-emerald font-bold shadow-glow-subtle' : 'text-studio-muted hover:text-studio-text'
-                  }`}
-                >
-                  <Code2 className="w-3.5 h-3.5" />
-                  <span>Code</span>
-                </button>
-              </div>
+                  <span>{activeProject.primaryAction.label}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
             </div>
 
-            {/* High-Resolution Screenshot Frame with Depth Reveal */}
-            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-studio-black border-2 border-studio-panelBorder shadow-laptop group-hover:border-studio-emerald/50 transition-all duration-500">
-              {viewMode === 'ui' ? (
-                <div className="w-full h-full relative overflow-hidden">
-                  <img
-                    src={activeProject.image}
-                    alt={`${activeProject.title} Interface Preview`}
-                    className="w-full h-full object-cover object-top hover:scale-[1.03] transition-transform duration-700"
-                    loading="lazy"
-                  />
-                  {/* Subtle Cinematic Vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-studio-black/60 via-transparent to-transparent pointer-events-none" />
-                </div>
-              ) : (
-                <div className="w-full h-full p-5 bg-[#030805] text-studio-mint font-mono text-xs overflow-auto select-all leading-relaxed">
-                  <pre>
-                    <code>{activeProject.codeSnippet}</code>
-                  </pre>
-                </div>
-              )}
+            <p className="text-xs sm:text-sm font-mono text-studio-secondary leading-relaxed">
+              {activeProject.description}
+            </p>
 
-              {/* Status Chip */}
-              <div className="absolute top-3.5 left-3.5 z-10">
-                <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold backdrop-blur-md border shadow-lg ${
-                  activeProject.status === 'In Development'
-                    ? 'bg-studio-charcoal/90 text-studio-lime border-studio-lime/50'
-                    : 'bg-studio-charcoal/90 text-studio-emerald border-studio-emerald/50'
-                }`}>
-                  ● {activeProject.status}
-                </span>
-              </div>
-            </div>
-
-            {/* Project Details Dossier */}
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-bold font-sans text-studio-text">
-                    {activeProject.title}
-                  </h3>
-                  <p className="text-xs font-mono text-studio-lime font-semibold">
-                    {activeProject.category}
-                  </p>
-                </div>
-
-                {activeProject.primaryAction && activeProject.primaryAction.url && (
-                  <a
-                    href={activeProject.primaryAction.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold text-studio-black bg-gradient-to-r from-studio-emerald to-studio-lime shadow-glow-emerald hover:opacity-90 transition-all w-fit"
+            {/* Feature Highlights */}
+            {activeProject.highlights && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                {activeProject.highlights.map((h) => (
+                  <div
+                    key={h}
+                    className="p-2.5 rounded-xl bg-studio-forest/50 border border-studio-panelBorder text-xs font-mono text-studio-text flex items-center gap-2"
                   >
-                    <span>{activeProject.primaryAction.label}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                )}
-              </div>
-
-              <p className="text-xs sm:text-sm font-mono text-studio-secondary leading-relaxed">
-                {activeProject.description}
-              </p>
-
-              {/* Feature Highlights */}
-              {activeProject.highlights && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  {activeProject.highlights.map((h) => (
-                    <div
-                      key={h}
-                      className="p-2.5 rounded-xl bg-studio-forest/50 border border-studio-panelBorder text-xs font-mono text-studio-text flex items-center gap-2"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5 text-studio-emerald flex-shrink-0" />
-                      <span className="truncate">{h}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Technologies */}
-              <div className="pt-2 flex flex-wrap items-center gap-2">
-                <span className="text-[10px] font-mono text-studio-muted uppercase mr-1">STACK:</span>
-                {activeProject.stack.map((t) => (
-                  <span
-                    key={t}
-                    className="px-2.5 py-0.5 rounded text-xs font-mono bg-studio-forest border border-studio-panelBorder text-studio-mint"
-                  >
-                    {t}
-                  </span>
+                    <ShieldCheck className="w-3.5 h-3.5 text-studio-emerald flex-shrink-0" />
+                    <span className="truncate">{h}</span>
+                  </div>
                 ))}
               </div>
-            </div>
+            )}
 
+            {/* Technologies */}
+            <div className="pt-2 flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-mono text-studio-muted uppercase mr-1">STACK:</span>
+              {activeProject.stack.map((t) => (
+                <span
+                  key={t}
+                  className="px-2.5 py-0.5 rounded text-xs font-mono bg-studio-forest border border-studio-panelBorder text-studio-mint"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
+
         </div>
 
       </div>
+
+      {/* Mobbin Full-Resolution Lightbox Modal */}
+      <ScreenshotLightbox
+        isOpen={Boolean(lightboxProject)}
+        project={lightboxProject}
+        onClose={() => setLightboxProject(null)}
+      />
     </section>
   );
 }
