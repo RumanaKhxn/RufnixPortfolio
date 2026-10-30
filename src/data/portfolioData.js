@@ -114,10 +114,11 @@ public async Task<IActionResult> ProcessDeposit([FromBody] DepositRequest req)
   return { overdueCount: prioritized.length, critical: prioritized.slice(0, 3) };
 };`,
       primaryAction: {
-        label: "Internal Workspace",
-        url: null,
-        isExternal: false
-      }
+        label: "Live Demo",
+        url: "https://lifepilot-1-uzvp.onrender.com/login",
+        isExternal: true
+      },
+      liveDemoUrl: "https://lifepilot-1-uzvp.onrender.com/login"
     },
     {
       id: "bytemind",

@@ -29,7 +29,7 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
   const getHostname = (id) => {
     switch (id) {
       case 'fr-studio': return 'fr-studio.rufnix.internal';
-      case 'lifepilot': return 'lifepilot.workspace';
+      case 'lifepilot': return 'lifepilot-1-uzvp.onrender.com';
       case 'bytemind': return 'bytemind-frontend-0pwx.onrender.com';
       default: return 'rufnix.studio';
     }
