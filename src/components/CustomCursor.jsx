@@ -87,7 +87,7 @@ export default function CustomCursor() {
     <>
       {/* Central pinpoint */}
       <div
-        className="fixed pointer-events-none z-50 rounded-full bg-studio-lime transition-transform duration-75 ease-out shadow-glow-lime"
+        className="fixed pointer-events-none z-[100000] rounded-full bg-studio-lime transition-transform duration-75 ease-out shadow-glow-lime"
         style={{
           width: '6px',
           height: '6px',
@@ -96,7 +96,7 @@ export default function CustomCursor() {
       />
       {/* Trailing illuminated aura */}
       <div
-        className={`fixed pointer-events-none z-50 rounded-full border transition-all duration-200 ease-out ${
+        className={`fixed pointer-events-none z-[100000] rounded-full border transition-all duration-200 ease-out ${
           isHovered
             ? 'border-studio-lime bg-studio-emerald/15 scale-150 shadow-glow-emerald'
             : 'border-studio-emerald/60 scale-100'

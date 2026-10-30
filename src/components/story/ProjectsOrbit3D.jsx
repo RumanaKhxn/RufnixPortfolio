@@ -16,12 +16,12 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
   // Map exact native aspect ratios audited from files:
   // fr-beauty-studio: 1024/491 = 2.09
   // lifepilot: 1024/486 = 2.11
-  // bytemind: 1024/543 = 1.89
+  // bytemind: 1024/486 = 2.11
   const getAspectRatio = (id) => {
     switch (id) {
       case 'fr-studio': return '2.09/1';
       case 'lifepilot': return '2.11/1';
-      case 'bytemind': return '1.89/1';
+      case 'bytemind': return '2.11/1';
       default: return '16/9';
     }
   };
@@ -30,7 +30,7 @@ export default function ProjectsOrbit3D({ activeProjectId, onSelectProject }) {
     switch (id) {
       case 'fr-studio': return 'fr-studio.rufnix.internal';
       case 'lifepilot': return 'lifepilot.workspace';
-      case 'bytemind': return 'bytemind.ai/chat';
+      case 'bytemind': return 'bytemind-frontend-0pwx.onrender.com';
       default: return 'rufnix.studio';
     }
   };

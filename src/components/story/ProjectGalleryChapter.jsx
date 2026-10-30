@@ -16,12 +16,12 @@ export default function ProjectGalleryChapter({ activeProjectId, onSelectProject
   // Exact native aspect ratios audited from files:
   // fr-beauty-studio: 1024/491 = 2.09
   // lifepilot: 1024/486 = 2.11
-  // bytemind: 1024/543 = 1.89
+  // bytemind: 1024/486 = 2.11
   const getAspectRatio = (id) => {
     switch (id) {
       case 'fr-studio': return '2.09/1';
       case 'lifepilot': return '2.11/1';
-      case 'bytemind': return '1.89/1';
+      case 'bytemind': return '2.11/1';
       default: return '16/9';
     }
   };
@@ -30,7 +30,7 @@ export default function ProjectGalleryChapter({ activeProjectId, onSelectProject
     switch (id) {
       case 'fr-studio': return 'fr-studio.rufnix.internal';
       case 'lifepilot': return 'lifepilot.workspace';
-      case 'bytemind': return 'bytemind.ai/chat';
+      case 'bytemind': return 'bytemind-frontend-0pwx.onrender.com';
       default: return 'rufnix.studio';
     }
   };
@@ -67,11 +67,18 @@ export default function ProjectGalleryChapter({ activeProjectId, onSelectProject
           {premierProjects.map((proj, idx) => {
             const isSelected = proj.id === activeProject.id;
             return (
-              <button
+              <div
                 key={proj.id}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => onSelectProject(proj.id)}
-                className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-300 flex items-center justify-between group ${
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectProject(proj.id);
+                  }
+                }}
+                className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-300 flex items-center justify-between group cursor-pointer ${
                   isSelected
                     ? 'bg-studio-forest/90 border-studio-lime shadow-glow-emerald scale-[1.01]'
                     : 'bg-studio-charcoal/80 border-studio-panelBorder hover:border-studio-emerald/50 hover:bg-studio-forest/40'
@@ -110,14 +117,27 @@ export default function ProjectGalleryChapter({ activeProjectId, onSelectProject
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                  {proj.liveDemoUrl && (
+                    <a
+                      href={proj.liveDemoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-mono font-bold text-studio-black bg-gradient-to-r from-studio-emerald to-studio-lime shadow-glow-subtle hover:scale-105 hover:shadow-glow-emerald transition-all"
+                      title={`Open ${proj.title} Live Demo`}
+                    >
+                      <span>Live Demo</span>
+                      <ArrowUpRight className="w-3 h-3" />
+                    </a>
+                  )}
                   <ChevronRight
                     className={`w-4 h-4 transition-transform ${
                       isSelected ? 'text-studio-lime translate-x-0.5' : 'text-studio-muted group-hover:translate-x-0.5'
                     }`}
                   />
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
@@ -139,6 +159,7 @@ export default function ProjectGalleryChapter({ activeProjectId, onSelectProject
               onToggleView={() => setViewMode(viewMode === 'ui' ? 'code' : 'ui')}
               onInspect={() => setLightboxProject(activeProject)}
               primaryAction={activeProject.primaryAction}
+              liveDemoUrl={activeProject.liveDemoUrl}
             />
 
             {/* Helper Pill Below Preview */}

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Lock, Maximize2, ExternalLink, Code2, Eye, Sparkles } from 'lucide-react';
+import { Lock, Maximize2, ExternalLink, Code2, Eye, Sparkles, ArrowUpRight } from 'lucide-react';
 
 export default function StudioDeviceFrame({
   src,
@@ -13,6 +13,7 @@ export default function StudioDeviceFrame({
   onToggleView,
   onInspect,
   primaryAction,
+  liveDemoUrl,
   className = '',
 }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -100,7 +101,19 @@ export default function StudioDeviceFrame({
             </button>
           )}
 
-          {primaryAction && primaryAction.url && (
+          {liveDemoUrl ? (
+            <a
+              href={liveDemoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-studio-emerald to-studio-lime text-studio-black font-mono font-bold text-[10px] sm:text-xs flex items-center gap-1 shadow-glow-subtle hover:opacity-90 hover:scale-105 transition-all flex-shrink-0"
+              title="Open Live Demo"
+              aria-label="Open Live Demo"
+            >
+              <span>Live Demo</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+          ) : primaryAction && primaryAction.url ? (
             <a
               href={primaryAction.url}
               target="_blank"
@@ -111,7 +124,7 @@ export default function StudioDeviceFrame({
             >
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
-          )}
+          ) : null}
         </div>
 
       </div>

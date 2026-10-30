@@ -125,26 +125,27 @@ public async Task<IActionResult> ProcessDeposit([FromBody] DepositRequest req)
       category: "Conversational AI Platform",
       status: "Active Project",
       isFeatured: false,
-      description: "A responsive modern AI chatbot web application built for real-time prompt-response streaming, conversational context persistence, and clear logic deduction.",
+      description: "A responsive modern conversational AI platform powered by Groq Cloud AI, featuring multi-turn conversation persistence, prompt engineering templates, voice input, and high-velocity reasoning.",
       image: "/assets/projects/bytemind.png",
       hasGenuineImage: true,
-      stack: ["React", "Node.js", "Tailwind CSS", "REST API"],
+      stack: ["React", "Groq Cloud AI", "Node.js", "Tailwind CSS"],
       highlights: [
-        "Real-Time Stream Processing",
-        "Deductive Logic Analysis Interface",
-        "Clean Minimalist Chat Architecture"
+        "Groq Cloud AI Ultra-Fast Inference",
+        "Multi-Turn Conversational Memory & Context",
+        "Integrated Voice Input & Prompt Matrix"
       ],
       codeFilename: "bytemind/chatEngine.jsx",
       codeSnippet: `const handleSendMessage = async (userPrompt) => {
   setConversation(prev => [...prev, { role: 'user', text: userPrompt }]);
-  const aiResponse = await fetchChatCompletion(userPrompt);
+  const aiResponse = await fetchGroqCompletion(userPrompt);
   setConversation(prev => [...prev, { role: 'bot', text: aiResponse }]);
 };`,
       primaryAction: {
-        label: "Internal Workspace",
-        url: null,
-        isExternal: false
-      }
+        label: "Live Demo",
+        url: "https://bytemind-frontend-0pwx.onrender.com",
+        isExternal: true
+      },
+      liveDemoUrl: "https://bytemind-frontend-0pwx.onrender.com"
     },
     {
       id: "nutriroute",
